@@ -1,32 +1,17 @@
-import java.io.*;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
+import socket
 
-public class Client {
-    public static void main(String[] args) throws IOException {
-        String serverIp = "100.126.205.5"; // <-- Tailscale IP of server
-        int port = 5000;
+SERVER_IP="100.x.x.x"#<--your Tailscale IP PORT=5000
 
-        Socket socket = new Socket(serverIp, port);
+sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 
-        BufferedReader console = new BufferedReader(
-                new InputStreamReader(System.in));
+print("Type messages (type 'exit' to quit)")
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+while True:msg=input("You: ")
 
-        BufferedWriter out = new BufferedWriter(
-                new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+if msg.lower()=="exit":break
 
-        String input;
-        while ((input = console.readLine()) != null) {
-            out.write(input + "\n");
-            out.flush();
+sock.sendto(msg.encode("utf-8"),(SERVER_IP,PORT))
 
-            String response = in.readLine();
-            System.out.println("Server: " + response);
-        }
+data,_=sock.recvfrom(1024)print("Server:",data.decode("utf-8"))
 
-        socket.close();
-    }
-}
+sock.close()
